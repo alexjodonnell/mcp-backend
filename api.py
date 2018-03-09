@@ -21,7 +21,7 @@ def get(name, params=None):
                 param_str += str(params[param_key])
 
     return json.load(request.urlopen(
-        "https://7066414.pythonanywhere.com/mcp/{}?token=78b9a29078a60441508d28c2f67a7ebb{}".format(name, param_str)))
+        "https://7066414.pythonanywhere.com/mcp/{}?token=78b9a29078a60441508d28c2f67a7ebb{}".format(name, param_str)))[name]
 
 
 def startup():

@@ -5,6 +5,7 @@ import math
 
 import api
 import utils
+from centroid_finder import centroid_locator
 from map import Map
 
 
@@ -34,25 +35,19 @@ class AI:
         self.move_cost = costs['move']['rate']
         self.move_weeks = costs['move']['weeks']
 
-        self.map = Map(parameters['rows'], parameters['cols'])
-        self.hubs = {}
-        self.hub_count = 0
+        self.map = Map(self.start_epoch, self.ms_per_week, self.hub_weeks, parameters['rows'], parameters['cols'])
 
         self.pp = pprint.PrettyPrinter(indent=6)
 
     def run(self):
-        watcher = Thread(target=self.watch)
-
         alg = Thread(target=self.algorithm)
         alg.start()
 
         alg.join()
-        watcher.join()
         print('Finished')
 
     def algorithm(self):
         print('Starting algorithm')
-        print(self.start_epoch)
 
         next_epoch = self.start_epoch
         while True:
@@ -63,18 +58,13 @@ class AI:
                 self.pp.pprint(prospect_report['report'])
                 self.map.append(prospect_report['report'])
 
-        self.build_and_deploy([0])
+                centroids = centroid_locator(self.map.points(), 0.15, 3)
+                self.map.mine(centroids[:1])
+                break
 
     def watch(self):
         week_delay = int(math.floor((self.hub_capacity / 8 / self.mining_rate)))
         print('Week Delay: {}'.format(week_delay))
-
-    def build_and_deploy(self, sector_ids):
-        new_hubs = ['H{}'.format(self.hub_count+i) for i in sector_ids]
-        api.build_hubs(new_hubs)
-
-        for new_hub, sector_id in zip(new_hubs, sector_ids):
-            self.hubs[new_hub] = sector_id
 
 
 if __name__ == '__main__':

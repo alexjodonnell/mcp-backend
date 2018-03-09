@@ -1,17 +1,12 @@
-import numpy as np
 import math
-import matplotlib.pyplot as plt
 import collections
-from mpl_toolkits.mplot3d import Axes3D
 from sklearn.cluster import KMeans
 
-def cnetroid_locator(X, stopping_criterion, initial_clusters):
 
-    global kmeans;
-
+def centroid_locator(X, stopping_criterion, initial_clusters):
     # Priming loop
-    i = initial_clusters;
-    old_inertia = math.inf;
+    i = initial_clusters
+    old_inertia = math.inf
     inertia_history = []
     k_history = []
     # stopping_criterion = 0.15
@@ -24,17 +19,9 @@ def cnetroid_locator(X, stopping_criterion, initial_clusters):
         # Fitting with inputs
         kmeans = kmeans.fit(X)
 
-        # Predicting the clusters
-        labels = kmeans.predict(X)
-
         # if the difference is less than a ratio of our current inertia,
         # select k
         if old_inertia - kmeans.inertia_ < stopping_criterion * kmeans.inertia_:
-            C = kmeans.cluster_centers_
-            fig = plt.figure()
-            plt.scatter(X[:, 0], X[:, 1], c=y)
-            plt.scatter(C[:, 0], C[:, 1], marker='.', c='#050505', s=1000)
-            plt.show()
             break
 
         old_inertia = kmeans.inertia_
@@ -43,13 +30,9 @@ def cnetroid_locator(X, stopping_criterion, initial_clusters):
 
         i = i + 1
 
-    return kmeans
+    cluster_count = collections.Counter(kmeans.labels_)
+    clusters = cluster_count.most_common(i)
+    centroids = [kmeans.cluster_centers_[cluster[0]] for cluster in clusters]
+    centroids = [[int(round(x)), int(round(y))] for x, y in centroids]
 
-
-
-
-
-
-
-
-
+    return centroids

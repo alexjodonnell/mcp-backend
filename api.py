@@ -24,7 +24,7 @@ def get(name, params=None):
             else:
                 param_str += str(params[param_key])
 
-    uri = "https://7066414.pythonanywhere.com/mcp/{}?token=78b9a29078a60441508d28c2f67a7ebb{}".format(name, param_str)
+    uri = "http://www.cec-2018.ca/mcp/{}?token=78b9a29078a60441508d28c2f67a7ebb{}".format(name, param_str)
     logger.log(uri)
     return json.load(request.urlopen(uri))[name]
 

@@ -3,7 +3,8 @@ import json
 
 from logger import Logger
 
-logger = Logger()
+logger = Logger(print=True)
+
 
 def get(name, params=None):
     param_str = ''

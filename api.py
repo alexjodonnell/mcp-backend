@@ -30,6 +30,9 @@ def get(name, params=None):
         if name == 'deploy_hubs':
             name = 'deploy hubs'
 
+        if name == 'move_hubs':
+            name = 'move hubs'
+
         obj = jsob_obj[name]
     except KeyError:
         raise Exception('{} not found in {} with uri {}'.format(name, jsob_obj, uri))

@@ -1,6 +1,9 @@
 from urllib import request
 import json
 
+from logger import Logger
+
+logger = Logger()
 
 def get(name, params=None):
     param_str = ''
@@ -20,8 +23,9 @@ def get(name, params=None):
             else:
                 param_str += str(params[param_key])
 
-    return json.load(request.urlopen(
-        "https://7066414.pythonanywhere.com/mcp/{}?token=78b9a29078a60441508d28c2f67a7ebb{}".format(name, param_str)))[name]
+    uri = "https://7066414.pythonanywhere.com/mcp/{}?token=78b9a29078a60441508d28c2f67a7ebb{}".format(name, param_str)
+    logger.log(uri)
+    return json.load(request.urlopen(uri))[name]
 
 
 def startup():

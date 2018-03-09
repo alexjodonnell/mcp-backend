@@ -58,7 +58,11 @@ class AI:
                 print(status_report['team']['week'])
 
     def algorithm(self):
-        pass
+        print('Starting algoirth')
+
+        self.build_and_deploy()
+
+    def build_and_deploy(self):
 
 
 if __name__ == '__main__':

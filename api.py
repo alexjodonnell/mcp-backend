@@ -15,18 +15,26 @@ def get(name, params=None):
             param_str += param_key + '='
 
             if isinstance(params[param_key], list):
-                param_str += '['
                 for i, val in enumerate(params[param_key]):
                     if i != 0:
                         param_str += ','
-                    param_str += val
-                param_str += ']'
+                    param_str += str(val)
             else:
                 param_str += str(params[param_key])
 
     uri = "http://www.cec-2018.ca/mcp/{}?token=78b9a29078a60441508d28c2f67a7ebb{}".format(name, param_str)
     logger.log(uri)
-    return json.load(request.urlopen(uri))[name]
+    jsob_obj = json.load(request.urlopen(uri))
+
+    try:
+        if name == 'deploy_hubs':
+            name = 'deploy hubs'
+
+        obj = jsob_obj[name]
+    except KeyError:
+        raise Exception('{} not found in {} with uri {}'.format(name, jsob_obj, uri))
+
+    return obj
 
 
 def startup():

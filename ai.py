@@ -40,15 +40,21 @@ class AI:
         self.pp = pprint.PrettyPrinter(indent=6)
 
     def run(self):
+        watcher = Thread(target=self.ship_move)
+        watcher.start()
+
+        getter = Thread(target=self.getter)
+        getter.start()
+
         alg = Thread(target=self.algorithm)
         alg.start()
 
         alg.join()
+        getter.join()
+        watcher.join()
         print('Finished')
 
-    def algorithm(self):
-        print('Starting algorithm')
-
+    def getter(self):
         next_epoch = self.start_epoch
         while True:
             if utils.current_epoch() > next_epoch:
@@ -58,13 +64,25 @@ class AI:
                 self.pp.pprint(prospect_report['report'])
                 self.map.append(prospect_report['report'])
 
-                centroids = centroid_locator(self.map.points(), 0.15, 3)
-                self.map.mine(centroids[:1])
-                break
-
-    def watch(self):
+    def ship_move(self):
         week_delay = int(math.floor((self.hub_capacity / 8 / self.mining_rate)))
         print('Week Delay: {}'.format(week_delay))
+
+        next_epoch = self.start_epoch
+        while True:
+            if utils.current_epoch() > next_epoch:
+                prospect_report = api.status_report()
+                next_epoch += self.ms_per_week * week_delay
+
+                hubs = prospect_report['hubs']
+                for hub in hubs:
+                    pass
+
+    def algorithm(self):
+        print('Starting algorithm')
+
+        # centroids = centroid_locator(self.map.points(), 0.15, 3)
+        # self.map.mine(centroids[:2])
 
 
 if __name__ == '__main__':

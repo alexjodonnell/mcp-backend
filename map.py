@@ -14,7 +14,7 @@ class Map:
         self.map = np.zeros([rows, cols])
         self.types = np.chararray([rows, cols])
         self.build_count = 0
-        self.max_build = 6
+        self.max_build = 10
 
         self.hubs = {}
 
@@ -42,7 +42,7 @@ class Map:
 
         # requests.post("http://localhost:3000/dashboard/map", data={'map': self.points()})
 
-    def build(self):
+    def build(self, point=0):
         if context.balance < self.hub_cost + self.deploy_cost:
             return
 
@@ -57,7 +57,7 @@ class Map:
             return
 
         centroids = centroid_locator(points, 0.15, 3)
-        coords = centroids[:1]
+        coords = centroids[point:point+1]
 
         sector_ids = [coord[0] * self.cols + coord[1] for coord in coords]
         self.zero(coords)
@@ -65,6 +65,7 @@ class Map:
         new_hubs = ['H{}'.format(sector_id) for sector_id in sector_ids]
         api.build_hubs(new_hubs)
 
+        count = 0
         while True:
             status_report = api.status_report()
             orders = status_report['orders']
@@ -72,7 +73,15 @@ class Map:
                 if order['action'] == 'deliver_hubs':
                     break
             else:
+                count += 1
+                if count == 10:
+                    if point == 1:
+                        return
+
+                    self.build(point=1)
+
                 print('Trying again')
+                print('not found in {}'.format(orders))
                 continue
 
             break
@@ -119,7 +128,6 @@ class Map:
         context.balance -= self.ship_cost
 
         api.ship_ore([hub['hub_id']], insured=insure)
-
 
     def get_best(self):
         pass

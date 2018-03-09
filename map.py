@@ -18,6 +18,6 @@ class Map:
             self.types[sector_id] = ore_type
 
             #TODO: UPDATE URL
-            request.post("http://localhost:3000/dashboard/map", data={'coords': estimated_tonnes, 'type': ore_type,
-                                                                      'rows': self.rows, 'cols': self.cols})
+            request.post("http://localhost:3000/dashboard/map", data={'prospect_map': prospect_map, 'rows': self.rows,
+                                                                      'cols': self.cols})
 

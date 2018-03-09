@@ -76,7 +76,12 @@ class AI:
 
                 hubs = prospect_report['hubs']
                 for hub in hubs:
-                    pass
+                    space_remaining = hub['space_remaining']
+                    active = hub['active']
+
+                    if space_remaining and not active:
+                        self.ship()
+                    elif 
 
     def algorithm(self):
         print('Starting algorithm')

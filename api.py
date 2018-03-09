@@ -1,4 +1,5 @@
 from urllib import request
+import json
 
 
 def get(name, params=None):
@@ -19,8 +20,8 @@ def get(name, params=None):
             else:
                 param_str += str(params[param_key])
 
-    return request.urlopen("https://7066414.pythonanywhere.com/mcp/{}?token=78b9a29078a60441508d28c2f67a7ebb{}"
-                           .format(name, param_str)).read()
+    return json.load(request.urlopen(
+        "https://7066414.pythonanywhere.com/mcp/{}?token=78b9a29078a60441508d28c2f67a7ebb{}".format(name, param_str)))
 
 
 def startup():

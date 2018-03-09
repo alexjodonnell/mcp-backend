@@ -1,4 +1,5 @@
 import numpy as np
+import requests
 
 import api
 import context
@@ -40,7 +41,10 @@ class Map:
             self.map[row][col] = estimated_tonnes
             self.types[row][col] = ore_type
 
-        # requests.post("http://localhost:3000/dashboard/map", data={'map': self.points()})
+        try:
+            requests.post("http://localhost:3000/dashboard/map", data={'map': self.points()})
+        except Exception:
+            pass
 
     def build(self, point=0):
         if context.balance < self.hub_cost + self.deploy_cost:

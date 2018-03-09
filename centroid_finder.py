@@ -6,8 +6,11 @@ from mpl_toolkits.mplot3d import Axes3D
 from sklearn.cluster import KMeans
 
 def cnetroid_locator(X, stopping_criterion, initial_clusters):
+
+    global kmeans;
+
     # Priming loop
-    # i = 3
+    i = initial_clusters;
     old_inertia = math.inf;
     inertia_history = []
     k_history = []
@@ -41,6 +44,11 @@ def cnetroid_locator(X, stopping_criterion, initial_clusters):
         i = i + 1
 
     return kmeans
+
+
+
+
+
 
 
 

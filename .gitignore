@@ -1,0 +1,22 @@
+#Various temporary files created by editors
+*~
+.idea
+nbproject
+*.metadata
+*.swp
+.directory
+.ds_store
+.temp.json
+.sass-cache
+.tmp
+*.apk
+target
+*.orig
+*.old
+
+# Exclude compiled Python code
+*.pyc
+
+# Exclude virtualenv directories
+backend/lib64
+bin/

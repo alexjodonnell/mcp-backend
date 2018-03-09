@@ -1,3 +1,4 @@
+from urllib import request
 import numpy as np
 
 
@@ -12,3 +13,8 @@ class Map:
         for sector_id, ore_type, estimated_tonnes in prospect_map:
             self.map[sector_id] = estimated_tonnes
             self.types[sector_id] = ore_type
+
+            #TODO: UPDATE URL
+            request.post("http://localhost:3000/dashboard/map", data={'coords': estimated_tonnes, 'type': ore_type,
+                                                                      'rows': self.rows, 'cols': self.cols})
+

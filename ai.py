@@ -1,6 +1,5 @@
 from threading import Thread
 
-import pprint
 import math
 
 import api
@@ -43,7 +42,6 @@ class AI:
                 prospect_report = api.prospect_report()
                 next_epoch += self.ms_per_week * 78
 
-                self.pp.pprint(prospect_report['report'])
                 self.map.append(prospect_report['report'])
 
     def ship_move_build(self):

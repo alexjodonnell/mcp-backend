@@ -1,10 +1,11 @@
 from threading import Thread
 
+import pprint
+import math
+
 import api
 import utils
 from map import Map
-
-WEEK = 350
 
 
 class AI:
@@ -12,6 +13,7 @@ class AI:
         status_report = api.startup()
         start_time = status_report['team']['start_time']
         self.start_epoch = utils.convert(start_time)
+        self.balance = 150
 
         parameters = api.parameters()
         self.lifetime = parameters['lifetime']
@@ -20,8 +22,8 @@ class AI:
         self.ms_per_week = parameters['ms_per_week']
 
         costs = parameters['costs']
-        self.build_cost = costs['build']['rate']
-        self.build_weeks = costs['build']['weeks']
+        self.hub_cost = costs['hub']['rate']
+        self.hub_weeks = costs['hub']['weeks']
 
         self.deploy_cost = costs['deploy']['rate']
         self.deploy_weeks = costs['deploy']['weeks']
@@ -29,40 +31,50 @@ class AI:
         self.ship_cost = costs['ship']['rate']
         self.ship_weeks = costs['ship']['weeks']
 
-        self.move_cost = costs['build']['rate']
-        self.move_weeks = costs['build']['weeks']
+        self.move_cost = costs['move']['rate']
+        self.move_weeks = costs['move']['weeks']
 
         self.map = Map(parameters['rows'], parameters['cols'])
+        self.hubs = {}
+        self.hub_count = 0
+
+        self.pp = pprint.PrettyPrinter(indent=6)
 
     def run(self):
-        getter = Thread(target=self.get_data)
-        getter.start()
+        watcher = Thread(target=self.watch)
 
         alg = Thread(target=self.algorithm)
         alg.start()
 
-        getter.join()
         alg.join()
+        watcher.join()
         print('Finished')
 
-    def get_data(self):
+    def algorithm(self):
+        print('Starting algorithm')
         print(self.start_epoch)
+
+        next_epoch = self.start_epoch
         while True:
-            next_epoch = self.start_epoch
             if utils.current_epoch() > next_epoch:
                 prospect_report = api.prospect_report()
-                next_epoch += WEEK * 78
+                next_epoch += self.ms_per_week * 78
+
+                self.pp.pprint(prospect_report['report'])
                 self.map.append(prospect_report['report'])
 
-                status_report = api.status_report()
-                print(status_report['team']['week'])
+        self.build_and_deploy([0])
 
-    def algorithm(self):
-        print('Starting algoirth')
+    def watch(self):
+        week_delay = int(math.floor((self.hub_capacity / 8 / self.mining_rate)))
+        print('Week Delay: {}'.format(week_delay))
 
-        self.build_and_deploy()
+    def build_and_deploy(self, sector_ids):
+        new_hubs = ['H{}'.format(self.hub_count+i) for i in sector_ids]
+        api.build_hubs(new_hubs)
 
-    def build_and_deploy(self):
+        for new_hub, sector_id in zip(new_hubs, sector_ids):
+            self.hubs[new_hub] = sector_id
 
 
 if __name__ == '__main__':

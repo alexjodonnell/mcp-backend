@@ -11,9 +11,6 @@ class Map:
 
     def append(self, prospect_map):
         for sector_id, ore_type, estimated_tonnes in prospect_map:
-            if estimated_tonnes == 0:
-                continue
-
             self.map[sector_id] = estimated_tonnes
             self.types[sector_id] = ore_type
 

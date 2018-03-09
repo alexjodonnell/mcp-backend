@@ -9,7 +9,7 @@ def get(name, params=None):
             param_str += '&'
             param_str += param_key + '='
 
-            if isinstance(params[param_key], list)
+            if isinstance(params[param_key], list):
                 param_str += '['
                 for i, val in enumerate(params[param_key]):
                     if i != 0:
@@ -55,9 +55,9 @@ def deploy_hubs(hubs, sector_ids):
     return get(deploy_hubs.__name__, {'hubs': hubs, 'sector_ids': sector_ids})
 
 
-def move_hubs(hubs, sector_ids)
+def move_hubs(hubs, sector_ids):
     return get(move_hubs.__name__, {'hubs': hubs, 'sector_ids': sector_ids})
 
 
-def ship_ore(hubs, insured)
+def ship_ore(hubs, insured):
     return get(ship_ore.__name__, {'hubs': hubs, 'insured': insured})

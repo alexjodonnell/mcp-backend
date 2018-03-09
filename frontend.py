@@ -1,5 +1,6 @@
 
 URL = 'localhost/logs'
 
-def post()
+
+def post():
     pass

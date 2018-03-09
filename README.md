@@ -1,2 +1,3 @@
-# mcp-backend
-CEC2018
+# Miner
+
+**Team 2**

@@ -25,8 +25,6 @@ class AI:
         costs = parameters['costs']
         self.map = Map(self.start_epoch, self.ms_per_week, costs, parameters['rows'], parameters['cols'])
 
-        self.pp = pprint.PrettyPrinter(indent=6)
-
     def run(self):
         watcher = Thread(target=self.ship_move_build)
         watcher.start()
@@ -51,12 +49,14 @@ class AI:
     def ship_move_build(self):
         week_delay = int(math.floor((self.hub_capacity / 8 / self.mining_rate)))
         print('Week Delay: {}'.format(week_delay))
+        week = 0
 
         next_epoch = self.start_epoch
         while True:
             if utils.current_epoch() > next_epoch:
                 status_report = api.status_report()
                 next_epoch += self.ms_per_week * week_delay
+                week += week_delay
 
                 hubs = status_report['hubs']
                 for key in hubs:
@@ -66,7 +66,7 @@ class AI:
 
                     if space_remaining and not active:
                         self.map.move(hub)
-                    elif space_remaining < 10:
+                    elif space_remaining < 10 or week > 480:
                         self.map.ship(hub, insure=True)
 
                 self.map.build()

@@ -10,6 +10,7 @@ class Map:
     def __init__(self, start_epoch, ms_per_week, costs, rows, cols):
         self.rows = rows
         self.cols = cols
+        self.deployed = []
         self.map = np.zeros([rows, cols])
         self.types = np.chararray([rows, cols])
         self.build_count = 0
@@ -117,5 +118,8 @@ class Map:
             return
         context.balance -= self.ship_cost
 
-        api.ship_ore([hub], insured=insure)
+        api.ship_ore([hub['hub_id']], insured=insure)
 
+
+    def get_best(self):
+        pass
